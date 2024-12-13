@@ -3,7 +3,7 @@
 <html lang="en">
 <head><meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Webpage1</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>Webpage2</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <style type="text/css">
     pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -7516,269 +7516,44 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Geographic-Distribution-of-Hate-Crimes-in-California-(2012%E2%80%932022)">Geographic Distribution of Hate Crimes in California (2012–2022)<a class="anchor-link" href="#Geographic-Distribution-of-Hate-Crimes-in-California-(2012%E2%80%932022)">¶</a></h1><h3 id="Introduction">Introduction<a class="anchor-link" href="#Introduction">¶</a></h3><p>This page explores the geographic distribution of hate crimes across California's counties from 2012 to 2022. An interactive map allows users to visualize the hate crime counts for each county by selecting a specific year.</p>
-<p>Hate crime data includes incidents motivated by race, ethnicity, religion, sexual orientation, gender, and other factors. The visualizations aim to highlight regional disparities and trends over time.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Loading-Geographic-Data">Loading Geographic Data<a class="anchor-link" href="#Loading-Geographic-Data">¶</a></h3><p>This section loads California county boundaries from the <code>CA_Counties.shp</code> shapefile using <code>geopandas</code>. The shapefile contains geographic features (county shapes) and attribute data (e.g., county names), which are stored in a GeoDataFrame (<code>gdf</code>) for mapping and spatial analysis.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
-
-<span class="c1"># Specify the path to the .shp file</span>
-<span class="n">shapefile_path</span> <span class="o">=</span> <span class="s2">"C:/Users/Ilike/CSCI385/Final_Project/ca_counties/CA_Counties.shp"</span>
-
-<span class="c1"># Load the shapefile into a Geopandas DataFrame</span>
-<span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">shapefile_path</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Processing-Hate-Crime-Data-for-Geographic-Analysis">Processing Hate Crime Data for Geographic Analysis<a class="anchor-link" href="#Processing-Hate-Crime-Data-for-Geographic-Analysis">¶</a></h3><p>This function processes hate crime data for a specific year to prepare it for geographic visualization. It ensures that all counties are represented, even if they report zero hate crimes for the given year.</p>
-<h4 id="Steps-Explained:">Steps Explained:<a class="anchor-link" href="#Steps-Explained:">¶</a></h4><ol>
-<li><p><strong>Load the Datasets</strong>:</p>
-<ul>
-<li><code>Hate Crime 2012 - 2022.csv</code>: Contains hate crime incidents across California.</li>
-<li><code>NCIC Code Jurisdiction List.csv</code>: Maps numeric county codes to county names.</li>
-</ul>
-</li>
-<li><p><strong>Filter for Specific Bias Type</strong>:</p>
-<ul>
-<li>Select hate crimes motivated by "Race/Ethnicity/Ancestry" from the dataset.</li>
-</ul>
-</li>
-<li><p><strong>Merge Datasets</strong>:</p>
-<ul>
-<li>Combine the hate crime data with the NCIC jurisdiction data using the numeric <code>County</code> code.</li>
-</ul>
-</li>
-<li><p><strong>Group and Aggregate Data</strong>:</p>
-<ul>
-<li>Group the merged data by county and year (<code>ClosedYear</code>) to count the total number of hate crimes per county.</li>
-</ul>
-</li>
-<li><p><strong>Filter by Year</strong>:</p>
-<ul>
-<li>Extract data for the specified year to focus on a single time slice.</li>
-</ul>
-</li>
-<li><p><strong>Ensure All Counties are Represented</strong>:</p>
-<ul>
-<li>Merge the yearly data with the complete list of counties from the NCIC data to include counties with zero hate crimes for the year.</li>
-</ul>
-</li>
-<li><p><strong>Handle Missing Values</strong>:</p>
-<ul>
-<li>Replace <code>NaN</code> values in the hate crime count with <code>0</code>.</li>
-<li>Fill missing years with the specified year to standardize the dataset.</li>
-</ul>
-</li>
-<li><p><strong>Convert Data Types</strong>:</p>
-<ul>
-<li>Convert <code>HateCrimeCount</code> and <code>ClosedYear</code> columns to integers for consistency.</li>
-</ul>
-</li>
-<li><p><strong>Reset Index</strong>:</p>
-<ul>
-<li>Reset the index for a clean, tabular output.</li>
-</ul>
-</li>
-<li><p><strong>View the Result</strong>:</p>
-</li>
+<h1 id="Hate-Crime-Trends-by-Category-(2012%E2%80%932022)">Hate Crime Trends by Category (2012–2022)<a class="anchor-link" href="#Hate-Crime-Trends-by-Category-(2012%E2%80%932022)">¶</a></h1><h3 id="Introduction">Introduction<a class="anchor-link" href="#Introduction">¶</a></h3><p>This page allows users to explore the distribution of hate crimes in California from 2012 to 2022, categorized by:</p>
+<ol>
+<li><strong>Race/Ethnicity/Ancestry</strong></li>
+<li><strong>LGBTQ Community</strong></li>
+<li><strong>Religion</strong></li>
 </ol>
+<p>An interactive dropdown lets users switch between these categories to view corresponding histograms.</p>
+<hr/>
+<h3 id="Features">Features<a class="anchor-link" href="#Features">¶</a></h3><h4 id="Interactive-Dropdown"><strong>Interactive Dropdown</strong><a class="anchor-link" href="#Interactive-Dropdown">¶</a></h4><ul>
+<li>Use the dropdown menu to select a category and dynamically generate the histogram.</li>
+<li>Categories include:<ul>
+<li><strong>Race/Ethnicity/Ancestry</strong> (light blue bars)</li>
+<li><strong>LGBTQ Community</strong> (pink bars)</li>
+<li><strong>Religion</strong> (deep orange bars)</li>
+</ul>
+</li>
+</ul>
+<h4 id="Histograms"><strong>Histograms</strong><a class="anchor-link" href="#Histograms">¶</a></h4><p>Each histogram shows:</p>
 <ul>
-<li>Print the resulting dataset for verification.</li>
+<li>The <strong>number of hate crimes</strong> reported annually for the selected category.</li>
+<li>A clear visual distribution across the years 2012–2022.</li>
 </ul>
-<h4 id="Example-Usage:">Example Usage:<a class="anchor-link" href="#Example-Usage:">¶</a></h4><ul>
-<li>The function is called for the year 2013:<div class="highlight"><pre><span></span><span class="n">process_hate_crime_data</span><span class="p">(</span><span class="mi">2013</span><span class="p">)</span>
-</pre></div>
-</li>
+<hr/>
+<h3 id="Explanation-of-Code">Explanation of Code<a class="anchor-link" href="#Explanation-of-Code">¶</a></h3><h4 id="1.-Data-Loading"><strong>1. Data Loading</strong><a class="anchor-link" href="#1.-Data-Loading">¶</a></h4><ul>
+<li>The hate crime data is loaded from <code>Hate Crime 2012 - 2022.csv</code>.</li>
 </ul>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="k">def</span> <span class="nf">process_hate_crime_data</span><span class="p">(</span><span class="n">year</span><span class="p">):</span>
-    <span class="c1"># Load the datasets</span>
-    <span class="n">hate_crime_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'Hate Crime 2012 - 2022.csv'</span><span class="p">)</span>
-    <span class="n">ncic_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'NCIC Code Jurisdiction List.csv'</span><span class="p">)</span>
-
-    <span class="c1"># Step 1: Filter the data for 'Race/Ethnicity/Ancestry' bias type</span>
-    <span class="n">race_ethnicity_ancestry_data</span> <span class="o">=</span> <span class="n">hate_crime_data</span><span class="p">[</span><span class="n">hate_crime_data</span><span class="p">[</span><span class="s1">'MostSeriousBiasType'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'Race/Ethnicity/Ancestry'</span><span class="p">]</span>
-
-    <span class="c1"># Step 2: Merge the datasets based on the numeric County code and CntyCode</span>
-    <span class="n">merged_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">race_ethnicity_ancestry_data</span><span class="p">,</span> <span class="n">ncic_data</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">'County'</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">'CntyCode'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
-
-    <span class="c1"># Step 3: Group the merged data by 'County' and 'ClosedYear', and count the occurrences (hate crimes)</span>
-    <span class="n">county_yearly_hate_crimes</span> <span class="o">=</span> <span class="n">merged_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">'County_y'</span><span class="p">,</span> <span class="s1">'ClosedYear'</span><span class="p">])</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">'RecordId'</span><span class="p">:</span> <span class="s1">'count'</span><span class="p">})</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-
-    <span class="c1"># Step 4: Rename columns for clarity</span>
-    <span class="n">county_yearly_hate_crimes</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'RecordId'</span><span class="p">:</span> <span class="s1">'HateCrimeCount'</span><span class="p">,</span> <span class="s1">'County_y'</span><span class="p">:</span> <span class="s1">'County'</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="c1"># Step 5: Filter data for the specified year</span>
-    <span class="n">hate_crimes_year</span> <span class="o">=</span> <span class="n">county_yearly_hate_crimes</span><span class="p">[</span><span class="n">county_yearly_hate_crimes</span><span class="p">[</span><span class="s1">'ClosedYear'</span><span class="p">]</span> <span class="o">==</span> <span class="n">year</span><span class="p">]</span>
-
-    <span class="c1"># Step 6: Merge with NCIC data to ensure all counties are included, even those without data</span>
-    <span class="n">all_counties_year</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">ncic_data</span><span class="p">,</span> <span class="n">hate_crimes_year</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">'County'</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">'County'</span><span class="p">)</span>
-
-    <span class="c1"># Step 7: Replace NaN values in HateCrimeCount with 0 for counties with no data and set ClosedYear to the selected year</span>
-    <span class="n">all_counties_year</span><span class="p">[</span><span class="s1">'HateCrimeCount'</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_counties_year</span><span class="p">[</span><span class="s1">'HateCrimeCount'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">all_counties_year</span><span class="p">[</span><span class="s1">'ClosedYear'</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_counties_year</span><span class="p">[</span><span class="s1">'ClosedYear'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">year</span><span class="p">)</span>
-
-    <span class="c1"># Step 8: Convert HateCrimeCount and ClosedYear to integers (removes decimals)</span>
-    <span class="n">all_counties_year</span><span class="p">[</span><span class="s1">'HateCrimeCount'</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_counties_year</span><span class="p">[</span><span class="s1">'HateCrimeCount'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-    <span class="n">all_counties_year</span><span class="p">[</span><span class="s1">'ClosedYear'</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_counties_year</span><span class="p">[</span><span class="s1">'ClosedYear'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-
-    <span class="c1"># Step 9: Reset index for clarity</span>
-    <span class="n">all_counties_year</span> <span class="o">=</span> <span class="n">all_counties_year</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="c1"># Step 10: View the resulting data</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">all_counties_year</span><span class="p">)</span>
-
-<span class="c1"># Example: Run for the year 2013</span>
-<span class="n">process_hate_crime_data</span><span class="p">(</span><span class="mi">2013</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>    CntyCode                  County  ClosedYear  HateCrimeCount
-0          1          Alameda County        2013              36
-1          2           Alpine County        2013               1
-2          3           Amador County        2013               0
-3          4            Butte County        2013               3
-4          5        Calaveras County        2013               1
-5          6           Colusa County        2013               0
-6          7     Contra Costa County        2013              16
-7          8        Del Norte County        2013               0
-8          9        El Dorado County        2013               1
-9         10           Fresno County        2013               7
-10        11            Glenn County        2013               0
-11        12         Humboldt County        2013               1
-12        13         Imperial County        2013               0
-13        14             Inyo County        2013               0
-14        15             Kern County        2013               8
-15        16            Kings County        2013               3
-16        17             Lake County        2013               3
-17        18           Lassen County        2013               0
-18        19      Los Angeles County        2013             158
-19        20           Madera County        2013               0
-20        21            Marin County        2013               0
-21        22         Mariposa County        2013               0
-22        23        Mendocino County        2013               0
-23        24           Merced County        2013               1
-24        25            Modoc County        2013               0
-25        26             Mono County        2013               0
-26        27         Monterey County        2013               2
-27        28             Napa County        2013               0
-28        29           Nevada County        2013               0
-29        30           Orange County        2013              17
-30        31           Placer County        2013               1
-31        32           Plumas County        2013               1
-32        33        Riverside County        2013              29
-33        34       Sacramento County        2013              21
-34        35       San Benito County        2013               0
-35        36   San Bernardino County        2013              32
-36        37        San Diego County        2013              60
-37        38    San Francisco County        2013               9
-38        39      San Joaquin County        2013               9
-39        40  San Luis Obispo County        2013               6
-40        41        San Mateo County        2013               1
-41        42    Santa Barbara County        2013               3
-42        43      Santa Clara County        2013              18
-43        44       Santa Cruz County        2013               3
-44        45           Shasta County        2013              11
-45        46           Sierra County        2013               0
-46        47         Siskiyou County        2013               0
-47        48           Solano County        2013               5
-48        49           Sonoma County        2013               5
-49        50       Stanislaus County        2013               2
-50        51           Sutter County        2013               1
-51        52           Tehama County        2013               2
-52        53          Trinity County        2013               0
-53        54           Tulare County        2013               1
-54        55         Tuolumne County        2013               1
-55        56          Ventura County        2013               5
-56        57             Yolo County        2013               5
-57        58             Yuba County        2013               1
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Visualizing-Hate-Crimes-Across-California-Counties">Visualizing Hate Crimes Across California Counties<a class="anchor-link" href="#Visualizing-Hate-Crimes-Across-California-Counties">¶</a></h3><p>This section creates an interactive map to visualize hate crimes in California by county for each year from 2012 to 2022.</p>
-<h4 id="Steps:"><strong>Steps:</strong><a class="anchor-link" href="#Steps:">¶</a></h4><ol>
-<li><p><strong>Load Data</strong>:</p>
-<ul>
-<li>Hate crime data (<code>Hate Crime 2012 - 2022.csv</code>), jurisdiction mapping (<code>NCIC Code Jurisdiction List.csv</code>), and California county shapefile (<code>CA_Counties.shp</code>).</li>
-</ul>
-</li>
-<li><p><strong>Preprocess Data</strong>:</p>
-<ul>
-<li>Filter for crimes based on <strong>Race/Ethnicity/Ancestry</strong>.</li>
-<li>Merge hate crime data with county information.</li>
-<li>Group by county and year to calculate total hate crimes.</li>
-</ul>
-</li>
-<li><p><strong>Interactive Map</strong>:</p>
-<ul>
-<li>The <code>visualize_hate_crime_year(year)</code> function generates a map showing hate crimes by county for the selected year:<ul>
-<li>Counties are color-coded (darker = more crimes).</li>
-<li>A slider lets users choose the year (2012–2022).</li>
-<li>The map updates dynamically based on the selection.</li>
+<h4 id="2.-Plotting-Function"><strong>2. Plotting Function</strong><a class="anchor-link" href="#2.-Plotting-Function">¶</a></h4><ul>
+<li><code>create_histogram</code>: Generates a histogram for the selected category with:<ul>
+<li>Customizable color schemes for each category.</li>
+<li>Yearly counts on the x-axis and the number of crimes on the y-axis.</li>
 </ul>
 </li>
 </ul>
-</li>
-</ol>
+<h4 id="3.-Interactive-Component"><strong>3. Interactive Component</strong><a class="anchor-link" href="#3.-Interactive-Component">¶</a></h4><ul>
+<li>The dropdown widget (<code>widgets.Dropdown</code>) allows users to select a category dynamically.</li>
+<li>The <code>display_histogram</code> function updates the histogram based on the dropdown selection.</li>
+</ul>
+<hr/>
 </div>
 </div>
 </div>
@@ -7791,51 +7566,77 @@ a.anchor-link {
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="n">interact</span>
+<span class="kn">import</span> <span class="nn">plotnine</span> <span class="k">as</span> <span class="nn">pn</span>
+<span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="n">interact</span><span class="p">,</span> <span class="n">widgets</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
 
-<span class="c1"># Load and process the data once</span>
-<span class="n">hate_crime_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'Hate Crime 2012 - 2022.csv'</span><span class="p">)</span>
-<span class="n">ncic_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'NCIC Code Jurisdiction List.csv'</span><span class="p">)</span>
-<span class="n">shapefile_path</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">'C:\Users\Ilike\CSCI385\Final_Project\ca_counties\CA_Counties.shp'</span>
-<span class="n">ca_counties</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">shapefile_path</span><span class="p">)</span>
+<span class="c1"># Load the dataset</span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"C:\Users\Ilike\CSCI385\Final_Project\Hate Crime 2012 - 2022.csv"</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
 
-<span class="c1"># Preprocess data</span>
-<span class="n">race_ethnicity_ancestry_data</span> <span class="o">=</span> <span class="n">hate_crime_data</span><span class="p">[</span><span class="n">hate_crime_data</span><span class="p">[</span><span class="s1">'MostSeriousBiasType'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'Race/Ethnicity/Ancestry'</span><span class="p">]</span>
-<span class="n">merged_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">race_ethnicity_ancestry_data</span><span class="p">,</span> <span class="n">ncic_data</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">'County'</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">'CntyCode'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
-<span class="n">county_yearly_hate_crimes</span> <span class="o">=</span> <span class="n">merged_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">'County_y'</span><span class="p">,</span> <span class="s1">'ClosedYear'</span><span class="p">])</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">'RecordId'</span><span class="p">:</span> <span class="s1">'count'</span><span class="p">})</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-<span class="n">county_yearly_hate_crimes</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'RecordId'</span><span class="p">:</span> <span class="s1">'HateCrimeCount'</span><span class="p">,</span> <span class="s1">'County_y'</span><span class="p">:</span> <span class="s1">'County'</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Define plotting function</span>
+<span class="k">def</span> <span class="nf">create_histogram</span><span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">color_scheme</span><span class="p">):</span>
+    <span class="n">filtered_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">'MostSeriousBiasType'</span><span class="p">]</span> <span class="o">==</span> <span class="n">category</span><span class="p">]</span>
+    <span class="n">plot</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">pn</span><span class="o">.</span><span class="n">ggplot</span><span class="p">(</span><span class="n">filtered_data</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">pn</span><span class="o">.</span><span class="n">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">'ClosedYear'</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">pn</span><span class="o">.</span><span class="n">geom_bar</span><span class="p">(</span><span class="n">stat</span><span class="o">=</span><span class="s1">'count'</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="n">color_scheme</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">color_scheme</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">pn</span><span class="o">.</span><span class="n">labs</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="s1">'Year'</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="s1">'Number of Hate Crimes'</span>
+        <span class="p">)</span>
+        <span class="o">+</span> <span class="n">pn</span><span class="o">.</span><span class="n">theme_bw</span><span class="p">()</span>
+        <span class="o">+</span> <span class="n">pn</span><span class="o">.</span><span class="n">scale_x_continuous</span><span class="p">(</span>
+            <span class="n">breaks</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2012</span><span class="p">,</span> <span class="mi">2023</span><span class="p">)),</span>
+            <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">year</span><span class="p">)</span> <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2012</span><span class="p">,</span> <span class="mi">2023</span><span class="p">)],</span>
+            <span class="n">expand</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="o">+</span> <span class="p">(</span><span class="n">pn</span><span class="o">.</span><span class="n">scale_fill_manual</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="n">color_scheme</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">color_scheme</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">pn</span><span class="o">.</span><span class="n">theme</span><span class="p">(</span>
+            <span class="n">figure_size</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+            <span class="n">plot_title</span><span class="o">=</span><span class="n">pn</span><span class="o">.</span><span class="n">element_text</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">'center'</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">'bold'</span><span class="p">),</span>
+            <span class="n">axis_title</span><span class="o">=</span><span class="n">pn</span><span class="o">.</span><span class="n">element_text</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">),</span>
+            <span class="n">axis_text</span><span class="o">=</span><span class="n">pn</span><span class="o">.</span><span class="n">element_text</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">),</span>
+            <span class="n">panel_grid_major</span><span class="o">=</span><span class="n">pn</span><span class="o">.</span><span class="n">element_line</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">),</span>
+            <span class="n">panel_grid_minor</span><span class="o">=</span><span class="n">pn</span><span class="o">.</span><span class="n">element_line</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">0.1</span><span class="p">),</span>
+            <span class="n">panel_border</span><span class="o">=</span><span class="n">pn</span><span class="o">.</span><span class="n">element_rect</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">legend_position</span><span class="o">=</span><span class="s1">'none'</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">plot</span>
 
-<span class="k">def</span> <span class="nf">visualize_hate_crime_year</span><span class="p">(</span><span class="n">year</span><span class="p">):</span>
-    <span class="c1"># Filter data for the selected year</span>
-    <span class="n">hate_crimes_year</span> <span class="o">=</span> <span class="n">county_yearly_hate_crimes</span><span class="p">[</span><span class="n">county_yearly_hate_crimes</span><span class="p">[</span><span class="s1">'ClosedYear'</span><span class="p">]</span> <span class="o">==</span> <span class="n">year</span><span class="p">]</span>
-    <span class="n">all_counties_year</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">ncic_data</span><span class="p">,</span> <span class="n">hate_crimes_year</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">'County'</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">'County'</span><span class="p">)</span>
-    <span class="n">all_counties_year</span><span class="p">[</span><span class="s1">'HateCrimeCount'</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_counties_year</span><span class="p">[</span><span class="s1">'HateCrimeCount'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="c1"># Function to display the selected histogram</span>
+<span class="k">def</span> <span class="nf">display_histogram</span><span class="p">(</span><span class="n">histogram_type</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">histogram_type</span> <span class="o">==</span> <span class="s2">"Race/Ethnicity/Ancestry"</span><span class="p">:</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">create_histogram</span><span class="p">(</span>
+            <span class="s2">"Race/Ethnicity/Ancestry"</span><span class="p">,</span>
+            <span class="s2">"Distribution of Hate Crimes Based on Race/Ethnicity/Ancestry Over Time (2012-2022)"</span><span class="p">,</span>
+            <span class="s2">"#add8e6"</span>  <span class="c1"># Light blue</span>
+        <span class="p">))</span>
+    <span class="k">elif</span> <span class="n">histogram_type</span> <span class="o">==</span> <span class="s2">"LGBTQ"</span><span class="p">:</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">create_histogram</span><span class="p">(</span>
+            <span class="s2">"Sexual Orientation"</span><span class="p">,</span>
+            <span class="s2">"Distribution of Hate Crimes Against LGBTQ Community Over Time (2012-2022)"</span><span class="p">,</span>
+            <span class="s2">"#F2BAC9"</span> <span class="c1"># Pink</span>
+        <span class="p">))</span>
+    <span class="k">elif</span> <span class="n">histogram_type</span> <span class="o">==</span> <span class="s2">"Religion"</span><span class="p">:</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">create_histogram</span><span class="p">(</span>
+            <span class="s2">"Religion"</span><span class="p">,</span>
+            <span class="s2">"Distribution of Hate Crimes Based on Religion Over Time (2012-2022)"</span><span class="p">,</span>
+            <span class="s2">"#DC602E"</span>  <span class="c1"># Deep orange</span>
+        <span class="p">))</span>
 
-    <span class="c1"># Merge with shapefile data</span>
-    <span class="n">merged_geo</span> <span class="o">=</span> <span class="n">ca_counties</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">all_counties_year</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">'NAMELSAD'</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">'County'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
-    <span class="n">merged_geo</span><span class="p">[</span><span class="s1">'HateCrimeCount'</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged_geo</span><span class="p">[</span><span class="s1">'HateCrimeCount'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="c1"># Dropdown widget</span>
+<span class="n">dropdown</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+    <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Race/Ethnicity/Ancestry"</span><span class="p">,</span> <span class="s2">"LGBTQ"</span><span class="p">,</span> <span class="s2">"Religion"</span><span class="p">],</span>
+    <span class="n">value</span><span class="o">=</span><span class="s2">"Race/Ethnicity/Ancestry"</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">"Category:"</span><span class="p">,</span>
+    <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s1">'description_width'</span><span class="p">:</span> <span class="s1">'initial'</span><span class="p">}</span>
+<span class="p">)</span>
 
-    <span class="c1"># Plot the data</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-    <span class="n">merged_geo</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s1">'HateCrimeCount'</span><span class="p">,</span>
-                    <span class="n">cmap</span><span class="o">=</span><span class="s1">'OrRd'</span><span class="p">,</span>
-                    <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
-                    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
-                    <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'0.8'</span><span class="p">,</span>
-                    <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Hate Crime Count by County in California (</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s1">)'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'off'</span><span class="p">)</span>
-
-    <span class="c1"># Explicitly display the figure</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-    <span class="c1"># Clear the figure to prevent implicit display</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
-
-<span class="c1"># Interactive slider</span>
-<span class="n">interact</span><span class="p">(</span><span class="n">visualize_hate_crime_year</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="p">(</span><span class="mi">2012</span><span class="p">,</span> <span class="mi">2022</span><span class="p">))</span>
+<span class="c1"># Interact with the dropdown</span>
+<span class="n">interact</span><span class="p">(</span><span class="n">display_histogram</span><span class="p">,</span> <span class="n">histogram_type</span><span class="o">=</span><span class="n">dropdown</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -7848,14 +7649,33 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>interactive(children=(IntSlider(value=2017, description='year', max=2022, min=2012), Output()), _dom_classes=(…</pre>
+<pre>interactive(children=(Dropdown(description='Category:', options=('Race/Ethnicity/Ancestry', 'LGBTQ', 'Religion…</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[1]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>&lt;function __main__.visualize_hate_crime_year(year)&gt;</pre>
+<pre>&lt;function __main__.display_histogram(histogram_type)&gt;</pre>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Insights">Insights<a class="anchor-link" href="#Insights">¶</a></h3><ul>
+<li>This interactive visualization highlights trends over time for each category:<ul>
+<li><strong>Race/Ethnicity/Ancestry</strong>: Most frequent hate crime category.</li>
+<li><strong>LGBTQ Community</strong>: Significant fluctuations, reflecting societal and cultural changes.</li>
+<li><strong>Religion</strong>: Displays variability, with certain years reporting higher incidents.</li>
+</ul>
+</li>
+</ul>
+<hr/>
 </div>
 </div>
 </div>
