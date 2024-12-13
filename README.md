@@ -4,21 +4,21 @@
 This analysis explores hate crime data reported in California from 2012 to 2022, highlighting trends, distributions, and impacts on various minority groups. The analysis is based on data provided by the California Department of Justice's [Open Justice Portal](https://openjustice.doj.ca.gov/data).
 
 ## Webpages
-### [Webpage 1: Geographic Distribution of Hate Crimes in California (2012–2022)](./webpage1.html)
+### [Webpage 1: Geographic Distribution of Hate Crimes in California (2012–2022)](Webpage1.html)
 - **Description**: This page explores the geographic distribution of hate crimes across California's counties from 2012 to 2022. An interactive map allows users to visualize the hate crime counts for each county by selecting a specific year.
 
 - **Highlights**:
   - Geographical visualization of hate crimes.
   - County-level breakdowns and statistics.
 
-### [Webpage 2: Hate Crime Trends by Category](./webpage2.html)
+### [Webpage 2: Hate Crime Trends by Category](Webpage2.html)
 - **Description**: This page allows users to explore the distribution of hate crimes in California from 2012 to 2022, categorized by Race/Ethnicity/Ancestry, LGBTQ Community, and Religion.
 
 - **Highlights**:
   - Interactive histograms for different bias types.
   - Easy navigation between categories to observe trends.
 
-### [Webpage 3: Insights into Hate Crime Trends Over Time (2012–2022)](./webpage3.html)
+### [Webpage 3: Insights into Hate Crime Trends Over Time (2012–2022)](Webpage3.html)
 - **Description**: This page provides a detailed analysis of hate crime trends, identifying the most affected counties and examining specific minority groups.
 
 - **Highlights**:
