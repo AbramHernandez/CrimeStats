@@ -21,10 +21,8 @@ This analysis explores hate crime data reported in California from 2012 to 2022,
 
 ---
 
-### 🐱 A Little Humor
+### 🐱 Dont be that guy
 ![Gato](Gato.gif)  
-<small>*"Racial slurs"* - A lighthearted meme to break the intensity of the topic.*</small>
-
 ---
 
 ## Purpose of the Analysis 🎯
