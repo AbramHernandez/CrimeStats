@@ -2,6 +2,12 @@
 
 ![Status](https://img.shields.io/badge/Status-Complete-brightgreen)
 ![Visualization](https://img.shields.io/badge/Visualization-Interactive-blue)
+---
+
+### 🐱 Dont be that guy
+![Gato](Gato.gif)  
+
+---
 
 ---
 
@@ -18,12 +24,6 @@ This analysis explores hate crime data reported in California from 2012 to 2022,
 | 🌍 [**Webpage 1: Geographic Distribution**](Webpage1.html) | Interactive map showing hate crime counts by county. |
 | 📊 [**Webpage 2: Hate Crime Trends by Category**](Webpage2.html) | Explore hate crimes categorized by Race/Ethnicity, LGBTQ, and Religion. |
 | 📈 [**Webpage 3: Insights Over Time**](Webpage3.html) | Trends and insights into hate crimes, including statistics and minority-focused analysis. |
-
----
-
-### 🐱 Dont be that guy
-![Gato](Gato.gif)  
----
 
 ## Purpose of the Analysis 🎯
 
